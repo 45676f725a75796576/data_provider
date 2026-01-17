@@ -6,7 +6,8 @@ class flat_file_data_provider:
         pass
     
     def request_rows_by_value_in_column(self, column: str, value: int) -> list[dict]:
-        """Returns rows, where value of column in parameters is same as value parameter
+        """Returns rows, where value of column in parameters is same as value parameter.\n
+        Shouldn't be used most of the time, because doesn't support tables.
 
         Args:
             column (str): Column to check

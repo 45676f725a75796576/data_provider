@@ -9,7 +9,7 @@ import re
 __connection = None
 
 def request_rows_by_value_in_column(table: str, column: str, value: int) -> list[dict]:
-    """Returns rows, where value of column in parameters is same as value parameter
+    """Returns rows, where value of column in parameters is same as value parameter.\n If connection failed still can acces flat-file with data.
 
     Args:
         table (str): What table is requested
