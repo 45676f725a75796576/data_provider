@@ -12,12 +12,33 @@ def request_rows_by_value_in_column(table: str, column: str, value: int) -> list
     """Returns rows, where value of column in parameters is same as value parameter.\n If connection failed still can acces flat-file with data.
 
     Args:
-        table (str): What table is requested
-        column (str): Column to check
-        value (int): What column must be equal to
+        table (str): What table is requested.
+        column (str): Column to check.
+        value (int): What column must be equal to.
 
     Returns:
-        list[dict]: Returns list of rows as dict with saved column names
+        list[dict]: Returns list of rows as dict with saved column names.
+    """
+    
+    if not __connection:
+        pr = flat_file_data_provider.flat_file_data_provider()
+        return pr.request_rows_by_value_in_column(column, value)
+    else:
+        pr = db_data_provider.db_data_provider()
+        pr.set_connection(__connection)
+        return pr.request_row_by_value_in_column(table, column, value)
+
+def request_rows_by_value_in_column(table: str, column: str, value: int, headers: list[str]) -> list[dict]:
+    """Returns rows, where value of column in parameters is same as value parameter.\n If connection failed still can acces flat-file with data.
+
+    Args:
+        table (str): What table is requested.
+        column (str): Column to check.
+        value (int): What column must be equal to.
+        headers (list[str]): If you want this program let to know what columns your table has, in case connection failed and flat file is empty.
+
+    Returns:
+        list[dict]: Returns list of rows as dict with saved column names.
     """
     
     if not __connection:
@@ -49,5 +70,6 @@ def connect(conn_data: dict):
         raise ValueError('Missing values.')
     
     __connection = pyodbc.connect(f'DRIVER={driver};SERVER={server};DATABASE={database};UID={uid};PWD={pwd}')
+    
     
 
