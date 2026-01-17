@@ -1,5 +1,4 @@
 import db_data_provider
-import flat_file_data_provider
 
 from os import getenv
 import pyodbc
@@ -8,8 +7,21 @@ import re
 
 __connection = None
 
+connection_dict = {
+    'driver': getenv('DRIVER', 'ODBC Driver 17 for SQL Server'), 
+    'server': getenv('SERVER', 'localhost'), 
+    'uid': getenv('UID'), 
+    'pwd': getenv('PWD')
+}
+
+def set_connection_data(**kwargs):
+    global connection_dict
+    
+    connection_dict = kwargs
+
 def request_rows_by_value_in_column(table: str, column: str, value: int) -> list[dict]:
-    """Returns rows, where value of column in parameters is same as value parameter.\n If connection failed still can acces flat-file with data.
+    """Returns rows, where value of column in parameters is same as value parameter.\n   
+    Selects best database to connect based on credentials. but not now(
 
     Args:
         table (str): What table is requested.
@@ -21,55 +33,26 @@ def request_rows_by_value_in_column(table: str, column: str, value: int) -> list
     """
     
     if not __connection:
-        pr = flat_file_data_provider.flat_file_data_provider()
-        return pr.request_rows_by_value_in_column(column, value)
+        raise RuntimeError('Database is not connected.')
     else:
-        pr = db_data_provider.db_data_provider()
-        pr.set_connection(__connection)
+        pr = db_data_provider.msssql_data_provider()
+        pr.connect(connection_dict)
+        
         return pr.request_row_by_value_in_column(table, column, value)
-
-def request_rows_by_value_in_column(table: str, column: str, value: int, headers: list[str]) -> list[dict]:
-    """Returns rows, where value of column in parameters is same as value parameter.\n If connection failed still can acces flat-file with data.
-
-    Args:
-        table (str): What table is requested.
-        column (str): Column to check.
-        value (int): What column must be equal to.
-        headers (list[str]): If you want this program let to know what columns your table has, in case connection failed and flat file is empty.
-
-    Returns:
-        list[dict]: Returns list of rows as dict with saved column names.
-    """
     
+def set_value_in_column_by_id(table: str, column: str, id: str, value: str):
     if not __connection:
-        pr = flat_file_data_provider.flat_file_data_provider()
-        return pr.request_rows_by_value_in_column(column, value)
+        raise RuntimeError('Database is not connected.')
     else:
-        pr = db_data_provider.db_data_provider()
-        pr.set_connection(__connection)
-        return pr.request_row_by_value_in_column(table, column, value)
+        pr = db_data_provider.msssql_data_provider()
+        pr.connect(connection_dict)
+        pr.set_value_in_column_by_id(table, column, id, value)
 
-def connect(conn_data: dict):
-    """This method must be executed before request.
-
-    Args:
-        conn_data (dict): Connection data, must contain parameters 'driver', 'server', 'database', 'uid', 'pwd'
-
-    Raises:
-        ValueError: Raises exception if data is missing
-    """
-    global __connection
-    
-    driver = conn_data['driver']
-    server = conn_data['server']
-    database = conn_data['database']
-    uid = conn_data['uid']
-    pwd = conn_data['pwd']
-    
-    if not driver or not server or not database or not uid or not pwd:
-        raise ValueError('Missing values.')
-    
-    __connection = pyodbc.connect(f'DRIVER={driver};SERVER={server};DATABASE={database};UID={uid};PWD={pwd}')
-    
-    
+def get_value_in_column_by_id(table: str, column: str, id: str):
+    if not __connection:
+        raise RuntimeError('Database is not connected.')
+    else:
+        pr = db_data_provider.msssql_data_provider()
+        pr.connect(connection_dict)
+        pr.get_value_in_column_by_id(table, column, id)
 
