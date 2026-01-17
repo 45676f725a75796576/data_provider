@@ -17,6 +17,8 @@ class db_data_provider:
         for row in rows:
             l.append(dict(zip(columns, row)))
             
+        __connection.close()
+            
         return l
 
     def set_connection(connection: pyodbc.Connection):
