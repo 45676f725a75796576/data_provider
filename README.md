@@ -9,3 +9,4 @@ SQL injection is forbidden.
 ## Requierements
 
 - **pyodbc**
+- **mysql**
