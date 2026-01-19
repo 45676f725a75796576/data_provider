@@ -42,6 +42,14 @@ class msssql_data_provider:
             
         return l
     
+    def insert(self, table: str, columns: tuple[str], values: tuple[str]):
+        if self.__connection == None:
+            raise RuntimeError("No connection to DB.")
+        cxr = self.__connection.cursor()
+        cxr.execute(f'INSERT INTO {table} {str(columns)} VALUES {str(values)}')
+        
+        self.__connection.close()
+    
     def get_value_in_column_by_id(self, table: str, column: str, id: str) -> tuple:
         if self.__connection == None:
             raise RuntimeError("No connection to DB.")

@@ -59,3 +59,18 @@ def get_value_in_column_by_id(table: str, column: str, id: str):
     pr.connect(connection_dict)
     pr.get_value_in_column_by_id(table, column, id)
 
+def insert(table: str, columns: tuple[str], values: tuple[str]):
+    """Insert new record into database. Values must follow exact order of columns.
+
+    Args:
+        table (str): Table name. For example: 'employees'
+        columns (tuple[str]): Columns to insert data into them. For example: ('name', 'surname', 'wage')
+        values (tuple[str]): Values for columns. For example: ('John', 'Doe', '20000')
+    """
+    if connection_dict['driver'] != None:
+        pr = db_data_provider.msssql_data_provider()
+    else:
+        pr = db_data_provider.mysql_data_provider()
+    pr.connect(connection_dict)
+    pr.insert(table, columns, values)
+
