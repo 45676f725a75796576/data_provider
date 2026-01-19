@@ -136,6 +136,14 @@ class mysql_data_provider:
         for k, v in r.items():
             return (k, v)
     
+    def insert(self, table: str, columns: tuple[str], values: tuple[str]):
+        if self.__connection == None:
+            raise RuntimeError("No connection to DB.")
+        cxr = self.__connection.cursor()
+        cxr.execute(f'INSERT INTO {table} {str(columns)} VALUES {str(values)}')
+        
+        self.__connection.close()
+    
     def connect(self, conn_data: dict):
         """This method must be executed before every request.
 
