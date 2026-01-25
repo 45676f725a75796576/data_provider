@@ -73,4 +73,18 @@ def insert(table: str, columns: tuple[str], values: tuple[str]):
         pr = db_data_provider.mysql_data_provider()
     pr.connect(connection_dict)
     pr.insert(table, columns, values)
+    
+def delete_by_id(table: str, id: str):
+    """Delete record from table by id string.
+
+    Args:
+        table (str): Table from which delete record
+        id (int): ID of record to delete
+    """
+    if connection_dict['driver'] != None:
+        pr = db_data_provider.msssql_data_provider()
+    else:
+        pr = db_data_provider.mysql_data_provider()
+    pr.connect(connection_dict)
+    pr.delete(table, id)
 

@@ -63,6 +63,22 @@ class msssql_data_provider:
         self.__connection.close()
         
         return row[0] if row else None
+    
+    def insert(self, table: str, columns: tuple[str], values: tuple[str]):
+        if self.__connection == None:
+            raise RuntimeError("No connection to DB.")
+        cxr = self.__connection.cursor()
+        cxr.execute(f'INSERT INTO {table} {str(columns)} VALUES {str(values)}')
+        
+        self.__connection.close()
+        
+    def delete(self, table: str, id: str):
+        if self.__connection == None:
+            raise RuntimeError("No connection to DB.")
+        cxr = self.__connection.cursor()
+        cxr.execute(f'DELETE FROM {table} WHERE id = {id}')
+        
+        self.__connection.close()
         
 
     def set_value_in_column_by_id(self, table: str, column: str, id: str, value: str):
@@ -141,6 +157,14 @@ class mysql_data_provider:
             raise RuntimeError("No connection to DB.")
         cxr = self.__connection.cursor()
         cxr.execute(f'INSERT INTO {table} {str(columns)} VALUES {str(values)}')
+        
+        self.__connection.close()
+        
+    def delete(self, table: str, id: int):
+        if self.__connection == None:
+            raise RuntimeError("No connection to DB.")
+        cxr = self.__connection.cursor()
+        cxr.execute(f'DELETE FROM {table} WHERE id = {id}')
         
         self.__connection.close()
     
