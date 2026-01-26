@@ -1,4 +1,4 @@
-import db_data_provider
+from . import db_data_provider
 
 from os import getenv
 
